@@ -27,7 +27,7 @@ function App() {
         throw new Error('Failed to load daily entries.');
       }
       if (!summaryRes.ok) {
-        throw new Error('Failed montly totals.');
+        throw new Error('Failed to load monthly totals.');
       }
 
       const deliveriesJson = await deliveriesRes.json();
@@ -128,23 +128,22 @@ function App() {
           ) : (
             <div className="table-wrapper">
               <table>
-                  <thead>
-                    <tr>
-                        <td>Date</td>
-                        <th>Count</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      {deliveries.map((item) => (
-                      <tr key={item.id}>
-                          <td>{formatDate(item.date)}</td>
-                        <td>{item.count}</td>
-                        </tr>
-                      )
-                  </tbody>
-                </table>
-              //>
-
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Count</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {deliveries.map((item) => (
+                    <tr key={item.id}>
+                      <td>{formatDate(item.date)}</td>
+                      <td>{item.count}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
 
@@ -157,22 +156,22 @@ function App() {
               {summary.map((entry) => (
                 <li key={`${entry.year}-${entry.month}`}>
                   <div>
-                    <strong>{new Date(entry.year, entry.month - 1, 1).toLocaleString(undefined, { month: 'long', year: 'numeric' })}</strong>
+                    <strong>
+                      {new Date(entry.year, entry.month - 1, 1).toLocaleString(undefined, {
+                        month: 'long',
+                        year: 'numeric',
+                      })}
+                    </strong>
                     <span>{entry.total} bottles</span>
                   </div>
                 </li>
               ))}
             </ul>
-          )
+          )}
         </div>
-        </section>
-      </div>
-
-    </section>
-
+      </section>
     </div>
-
- );
+  );
 }
 
 export default App;
