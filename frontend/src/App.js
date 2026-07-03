@@ -9,7 +9,8 @@ const formatDate = (dateString) => {
 };
 
 function App() {
-  const [formState, setFormState] = useState({ date: new Date().toISOString().split('T')[0], count: '' });
+  const today = new Date().toISOString().split('T')[0];
+  const [formState, setFormState] = useState({ date: today, count: '' });
   const [deliveries, setDeliveries] = useState([]);
   const [summary, setSummary] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -26,7 +27,7 @@ function App() {
         throw new Error('Failed to load daily entries.');
       }
       if (!summaryRes.ok) {
-        throw new Error('Failed to load monthly totals.');
+        throw new Error('Failed montly totals.');
       }
 
       const deliveriesJson = await deliveriesRes.json();
@@ -64,7 +65,7 @@ function App() {
         throw new Error(result?.message || 'Failed to add delivery.');
       }
 
-      setFormState({ date: new Date().toISOString().split('T')[0], count: '' });
+      setFormState({ date: today, count: '' });
       await loadData();
     } catch (err) {
       console.error(err);
@@ -96,6 +97,7 @@ function App() {
             <input
               type="date"
               value={formState.date}
+              max={today}
               onChange={(event) => setFormState((prev) => ({ ...prev, date: event.target.value }))}
               required
             />
@@ -126,22 +128,23 @@ function App() {
           ) : (
             <div className="table-wrapper">
               <table>
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Count</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {deliveries.map((item) => (
-                    <tr key={item.id}>
-                      <td>{formatDate(item.date)}</td>
-                      <td>{item.count}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  <thead>
+                    <tr>
+                        <td>Date</td>
+                        <th>Count</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {deliveries.map((item) => (
+                      <tr key={item.id}>
+                          <td>{formatDate(item.date)}</td>
+                        <td>{item.count}</td>
+                        </tr>
+                      )
+                  </tbody>
+                </table>
+              //>
+
           )}
         </div>
 
@@ -160,11 +163,16 @@ function App() {
                 </li>
               ))}
             </ul>
-          )}
+          )
         </div>
-      </section>
+        </section>
+      </div>
+
+    </section>
+
     </div>
-  );
+
+ );
 }
 
 export default App;
